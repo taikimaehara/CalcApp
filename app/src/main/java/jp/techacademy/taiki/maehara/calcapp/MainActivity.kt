@@ -52,9 +52,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                     try {
                         displayResult(editText1.divide(editText2, 10, BigDecimal.ROUND_HALF_UP))
-                    }catch(e: ArithmeticException){
+                    } catch (e: ArithmeticException) {
 
-                        Log.d("test","$e")
+                        Log.d("test", "$e")
                         //スナックバー表示前にソフトウェアキーボードを閉じておく
                         val manager =
                             this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -66,8 +66,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
             }
-        }catch(e: NumberFormatException){
-            Log.d("test","$e")
+        } catch (e: NumberFormatException) {
+            Log.d("test", "$e")
             //スナックバー表示前にソフトウェアキーボードを閉じておく
             val manager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             manager.hideSoftInputFromWindow(v.windowToken, 0)
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun displayResult(result: BigDecimal){
+    private fun displayResult(result: BigDecimal) {
         Log.d("test", "$result")
         val intent = Intent(this, ResultCalcActivity::class.java)
         intent.putExtra("VALUE1", result.toString())
