@@ -24,56 +24,58 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View) {
 
-        val editText1 = editText1.text.toString().toBigDecimal()
-        val editText2 = editText2.text.toString().toBigDecimal()
+        try {
+            val editText1 = editText1.text.toString().toBigDecimal()
+            val editText2 = editText2.text.toString().toBigDecimal()
 
-        Log.d("test", "editText1=$editText1, editText2=$editText2")
+            Log.d("test", "editText1=$editText1, editText2=$editText2")
 
-        if(editText1.toString() == "" || editText2.toString() == "" ){
-            Log.d("test", "error")
+            //ボタンに応じた四則演算及び、結果表示
+            when (v.id) {
+                R.id.resultAdditionButton -> {
+                    Log.d("test", "add")
 
+                    displayResult(editText1.add(editText2))
+                }
+                R.id.resultSubtractionButton -> {
+                    Log.d("test", "sub")
+
+                    displayResult(editText1.subtract(editText2))
+                }
+                R.id.resultMultiplicationButton -> {
+                    Log.d("test", "mul")
+
+                    displayResult(editText1.multiply(editText2))
+                }
+                R.id.resultDivisionButton -> {
+                    Log.d("test", "div")
+
+                    try {
+                        displayResult(editText1.divide(editText2, 10, BigDecimal.ROUND_HALF_UP))
+                    }catch(e: ArithmeticException){
+
+                        Log.d("test","$e")
+                        //スナックバー表示前にソフトウェアキーボードを閉じておく
+                        val manager =
+                            this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        manager.hideSoftInputFromWindow(v.windowToken, 0)
+
+                        Snackbar.make(v, "0では割れません", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null)
+                            .show()
+                    }
+                }
+            }
+        }catch(e: NumberFormatException){
+            Log.d("test","$e")
             //スナックバー表示前にソフトウェアキーボードを閉じておく
             val manager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             manager.hideSoftInputFromWindow(v.windowToken, 0)
 
-            Snackbar.make(v, "入力されていない項目があります", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null)
-                    .show()
+            Snackbar.make(v, "数字を入力してください", Snackbar.LENGTH_LONG)
+                .setAction("Action", null)
+                .show()
         }
-
-        when(v.id){
-            R.id.resultAdditionButton -> {
-                Log.d("test", "add")
-
-                displayResult(editText1.add(editText2))
-            }
-            R.id.resultSubtractionButton -> {
-                Log.d("test", "sub")
-
-                displayResult(editText1.subtract(editText2))
-            }
-            R.id.resultMultiplicationButton -> {
-                Log.d("test", "mul")
-
-                displayResult(editText1.multiply(editText2))
-            }
-            R.id.resultDivisionButton -> {
-                Log.d("test", "div")
-
-                if(editText2.toDouble() != 0.0) {
-                    displayResult(editText1.divide(editText2,10,BigDecimal.ROUND_HALF_UP))
-                } else {
-                    //スナックバー表示前にソフトウェアキーボードを閉じておく
-                    val manager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    manager.hideSoftInputFromWindow(v.windowToken, 0)
-
-                    Snackbar.make(v, "0では割れません", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null)
-                            .show()
-                }
-            }
-        }
-
     }
 
     private fun displayResult(result: BigDecimal){
